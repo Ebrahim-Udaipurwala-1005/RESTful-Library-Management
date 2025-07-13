@@ -46,10 +46,15 @@ public class BookResource {
 //    public ResponseEntity<List<Book>> getAllBooks() {}
     // - POST /books/{bookId}/checkout: Checks out a book. Return 409 (Conflict) if not possible.
     @PostMapping("/{bookId}/checkout")
-    public ResponseEntity<Void> checkoutBook(@PathVariable UUID bookId) {
-        Optional<Book> book = bookService.checkOutBook(bookId);
-        return book.isPresent() ? ResponseEntity.ok().build() : ResponseEntity.noContent().build();
+    public ResponseEntity<Book> checkoutBook(@PathVariable UUID bookId) {
+        return bookService.checkOutBook(bookId).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
     // - POST /books/{bookId}/return: Returns a book. Return 409 (Conflict) if not possible.
+    @PostMapping("/{bookId}/return")
+    public ResponseEntity<Book> returnBook(@PathVariable UUID bookId) {
+        return bookService.returnBook(bookId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
+    }
 
 }
