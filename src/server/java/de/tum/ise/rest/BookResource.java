@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -22,10 +23,33 @@ public class BookResource {
 
     // TODO Part 1 & 3: Implement ALL the required endpoints here.
     // - POST /books: Create a book.
+    @PostMapping
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        Book savedBook = bookService.saveBook(book);
+        return ResponseEntity.ok(savedBook);
+    }
     // - PUT /books/{bookId}: Update a book.
+    @PutMapping("/{bookId}")
+    public ResponseEntity<Book> updateBook(@PathVariable UUID bookId, @RequestBody Book book) {
+        book.setId(bookId);
+        Book updatedBook = bookService.saveBook(book);
+        return ResponseEntity.ok(updatedBook);
+    }
     // - DELETE /books/{bookId}: Delete a book.
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity<Void> deleteBook(@PathVariable UUID bookId) {
+        bookService.deleteBook(bookId);
+        return ResponseEntity.noContent().build();
+    }
     // - GET /books: Get all books, with optional filtering by author and genre.
+//    @GetMapping
+//    public ResponseEntity<List<Book>> getAllBooks() {}
     // - POST /books/{bookId}/checkout: Checks out a book. Return 409 (Conflict) if not possible.
+    @PostMapping("/{bookId}/checkout")
+    public ResponseEntity<Void> checkoutBook(@PathVariable UUID bookId) {
+        Optional<Book> book = bookService.checkOutBook(bookId);
+        return book.isPresent() ? ResponseEntity.ok().build() : ResponseEntity.noContent().build();
+    }
     // - POST /books/{bookId}/return: Returns a book. Return 409 (Conflict) if not possible.
 
 }
