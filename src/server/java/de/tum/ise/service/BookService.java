@@ -70,7 +70,14 @@ public class BookService {
         // 2. If the book exists and its status is AVAILABLE, change its status to CHECKED_OUT.
         // 3. Return an Optional containing the updated book.
         // 4. If the book doesn't exist or is not AVAILABLE, return an empty Optional.
-        return books.stream().filter(existingBook -> existingBook.getId().equals(bookId)).findFirst().or(Optional::empty);
+        return books.stream()
+                .filter(b -> b.getId().equals(bookId))
+                .filter(b -> b.getStatus() == Book.Status.AVAILABLE)
+                .findFirst()
+                .map(b -> {
+                    b.setStatus(Book.Status.CHECKED_OUT);
+                    return b;
+                });
     }
 
     public Optional<Book> returnBook(UUID bookId) {
@@ -79,6 +86,13 @@ public class BookService {
         // 2. If the book exists and its status is CHECKED_OUT, change its status to AVAILABLE.
         // 3. Return an Optional containing the updated book.
         // 4. If the book doesn't exist or is not CHECKED_OUT, return an empty Optional.
-        return Optional.empty();
+        return books.stream()
+                .filter(b -> b.getId().equals(bookId))
+                .filter(b -> b.getStatus() == Book.Status.CHECKED_OUT)
+                .findFirst()
+                .map(b -> {
+                    b.setStatus(Book.Status.AVAILABLE);
+                    return b;
+                });
     }
 }
