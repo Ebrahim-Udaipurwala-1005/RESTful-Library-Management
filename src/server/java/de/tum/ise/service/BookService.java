@@ -32,6 +32,7 @@ public class BookService {
             // Logic for creating a new book
             book.setId(UUID.randomUUID());
             // TODO Part 1: When a new book is created, what should its default status be?
+            book.setStatus(Book.Status.AVAILABLE);
             // Set the book's status to AVAILABLE.
             books.add(book);
             return book;
@@ -69,7 +70,7 @@ public class BookService {
         // 2. If the book exists and its status is AVAILABLE, change its status to CHECKED_OUT.
         // 3. Return an Optional containing the updated book.
         // 4. If the book doesn't exist or is not AVAILABLE, return an empty Optional.
-        return Optional.empty();
+        return books.stream().filter(existingBook -> existingBook.getId().equals(bookId)).findFirst().or(Optional::empty);
     }
 
     public Optional<Book> returnBook(UUID bookId) {
