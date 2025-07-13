@@ -42,8 +42,14 @@ public class BookResource {
         return ResponseEntity.noContent().build();
     }
     // - GET /books: Get all books, with optional filtering by author and genre.
-//    @GetMapping
-//    public ResponseEntity<List<Book>> getAllBooks() {}
+    @GetMapping
+    public ResponseEntity<List<Book>> getAllBooks(
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) Book.Genre genre
+    ) {
+        List<Book> books = bookService.getAllBooks(author, genre);
+        return ResponseEntity.ok(books);
+    }
     // - POST /books/{bookId}/checkout: Checks out a book. Return 409 (Conflict) if not possible.
     @PostMapping("/{bookId}/checkout")
     public ResponseEntity<Book> checkoutBook(@PathVariable UUID bookId) {
