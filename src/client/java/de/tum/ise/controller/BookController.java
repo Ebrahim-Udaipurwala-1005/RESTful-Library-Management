@@ -59,7 +59,7 @@ public class BookController {
         }
         else {
             webClient.put()
-                    .uri("/{id}", book.getId())
+                    .uri("/books/{id}", book.getId())
                     .bodyValue(book)
                     .retrieve()
                     .bodyToMono(Book.class)
@@ -77,7 +77,7 @@ public class BookController {
         }
         else {
             webClient.delete()
-                    .uri("/{id}", book.getId())
+                    .uri("/books/{id}", book.getId())
                     .retrieve()
                     .toBodilessEntity()
                     .doOnSuccess(response -> {
