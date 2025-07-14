@@ -18,10 +18,15 @@ import java.util.function.Function;
 public class BookController {
 
     private final List<Book> books;
+    private final WebClient webClient;
 
     // TODO Part 2: Add all required attributes and implement the constructor
     public BookController() {
         this.books = new ArrayList<>();
+        this.webClient = WebClient.builder()
+                .baseUrl("http://localhost:8080")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
 
     // Helper method
@@ -54,14 +59,28 @@ public class BookController {
 
     @PostMapping("/books/{id}/checkout")
     public void checkoutBook(Book book, Consumer<List<Book>> booksConsumer) {
-        // TODO Part 2: Make an HTTP POST request to the checkout endpoint.
-        // On success, the server returns the updated book. Use the `updateLocalBook` helper.
-        updateLocalBook(book, booksConsumer);
-        ResponseEntity.ok(book);
+        webClient.post()
+                .uri("/books/{id}/checkout", book.getId())
+                .retrieve()
+                .toEntity(Book.class)
+                .subscribe(response -> {
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        updateLocalBook(response.getBody(), booksConsumer);
+                    }
+                    // Handle errors if needed
+                });
     }
 
     public void returnBook(Book book, Consumer<List<Book>> booksConsumer) {
-        // TODO Part 2: Make an HTTP POST request to the return endpoint.
-        // On success, the server returns the updated book. Use the `updateLocalBook` helper.
+        webClient.post()
+                .uri("/books/{id}/return", book.getId())
+                .retrieve()
+                .toEntity(Book.class)
+                .subscribe(response -> {
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        updateLocalBook(response.getBody(), booksConsumer);
+                    }
+                    // Handle errors if needed
+                });
     }
 }
