@@ -43,7 +43,7 @@ public class BookController {
     public void addBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP POST request to create a book.
         webClient.post()
-                .uri("{/books}")
+                .uri("/books")
                 .bodyValue(book).retrieve()
                 .bodyToMono(Book.class).doOnNext(newBook -> {
                     books.add(newBook);
