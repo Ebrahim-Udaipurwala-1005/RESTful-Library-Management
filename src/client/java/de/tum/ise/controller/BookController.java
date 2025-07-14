@@ -54,7 +54,7 @@ public class BookController {
 
     public void updateBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP PUT request to update a book.
-        if (book.getId() == null) {  // Guard clause
+        if (book == null || book.getId() == null) {  // Guard clause
             throw new IllegalArgumentException("Book ID cannot be null for update");
         }
         else {
@@ -73,7 +73,7 @@ public class BookController {
 
     public void deleteBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP DELETE request to delete a book.
-        if (book.getId() == null) {  // Guard clause
+        if (book == null || book.getId() == null) {  // Guard clause
             throw new IllegalArgumentException("Book ID cannot be null for deletion");
         }
         else {
