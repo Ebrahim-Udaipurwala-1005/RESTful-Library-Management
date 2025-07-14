@@ -99,7 +99,7 @@ public class BookController {
                         builder = builder.queryParam("author", author);
                     }
                     if (genre != null) {
-                        builder = builder.queryParam("genre", genre.toString());
+                        builder = builder.queryParam("genre", genre.name());
                     }
                     return builder.build();
                 })
