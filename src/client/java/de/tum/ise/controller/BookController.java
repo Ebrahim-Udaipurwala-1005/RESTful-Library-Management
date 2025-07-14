@@ -43,13 +43,13 @@ public class BookController {
     public void addBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP POST request to create a book.
         webClient.post()
-                .uri("/books")
+                .uri("")
                 .bodyValue(book).retrieve()
-                .toEntity(Book.class).subscribe(response -> {
-                    response.getStatusCode().is2xxSuccessful();
-                    books.add(response.getBody());
+                .bodyToMono(Book.class).doOnNext(newBook -> {
+                    books.add(newBook);
                     booksConsumer.accept(new ArrayList<>(books));
-        });
+                })
+                .subscribe();
     }
 
     public void updateBook(Book book, Consumer<List<Book>> booksConsumer) {
