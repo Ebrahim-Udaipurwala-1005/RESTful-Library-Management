@@ -95,23 +95,22 @@ public class BookController {
         webClient.get()
                 .uri(uriBuilder -> {
                     UriBuilder builder = uriBuilder.path("/books");
-                    if (author != null && !author.isEmpty()) {
-                        builder.queryParam("author", author);
+                    if (author != null && !author.isBlank()) {
+                        builder = builder.queryParam("author", author);
                     }
                     if (genre != null) {
-                        builder.queryParam("genre", genre.name());
+                        builder = builder.queryParam("genre", genre.toString());
                     }
                     return builder.build();
                 })
                 .retrieve()
-                .toEntity(new ParameterizedTypeReference<List<Book>>() {})
-                .subscribe(response -> {
-                    if (response.getStatusCode().is2xxSuccessful()) {
-                        books.clear();
-                        books.addAll(response.getBody());
-                        booksConsumer.accept(new ArrayList<>(books));
-                    }
-                });
+                .bodyToMono(new ParameterizedTypeReference<List<Book>>() {})
+                .doOnNext(fetchedBooks -> {
+                    books.clear();
+                    books.addAll(fetchedBooks);
+                    booksConsumer.accept(new ArrayList<>(books));
+                })
+                .subscribe();
     }
 
     @PostMapping("/books/{id}/checkout")
