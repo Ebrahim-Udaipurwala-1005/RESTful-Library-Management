@@ -59,15 +59,14 @@ public class BookController {
         }
         else {
             webClient.put()
-                    .uri("/books/{id}")
+                    .uri("/{id}", book.getId())
                     .bodyValue(book)
                     .retrieve()
-                    .toEntity(Book.class)
-                    .subscribe(response -> {
-                        if (response.getStatusCode().is2xxSuccessful()) {
-                            updateLocalBook(response.getBody(), booksConsumer);
-                        }
-                    });
+                    .bodyToMono(Book.class)
+                    .doOnNext(newBook -> {
+                        updateLocalBook(newBook, booksConsumer);
+                    })
+                    .subscribe();
         }
     }
 
