@@ -54,26 +54,36 @@ public class BookController {
 
     public void updateBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP PUT request to update a book.
-        webClient.put()
-                .uri("/books/{id}")
-                .bodyValue(book)
-                .retrieve()
-                .toEntity(Book.class)
-                .subscribe(response -> {
-                    if (response.getStatusCode().is2xxSuccessful()) {
-                        updateLocalBook(response.getBody(), booksConsumer);
-                    }
-                });
+        if (book.getId() == null) {  // Guard clause
+            throw new IllegalArgumentException("Book ID cannot be null for update");
+        }
+        else {
+            webClient.put()
+                    .uri("/books/{id}")
+                    .bodyValue(book)
+                    .retrieve()
+                    .toEntity(Book.class)
+                    .subscribe(response -> {
+                        if (response.getStatusCode().is2xxSuccessful()) {
+                            updateLocalBook(response.getBody(), booksConsumer);
+                        }
+                    });
+        }
     }
 
     public void deleteBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP DELETE request to delete a book.
-        webClient.delete().uri("/books/{id}").retrieve().toBodilessEntity().subscribe(response -> {
-            if (response.getStatusCode().is2xxSuccessful()) {
-                books.removeIf(b -> b.getId().equals(book.getId()));
-                booksConsumer.accept(new ArrayList<>(books));
-            }
-        });
+        if (book.getId() == null) {  // Guard clause
+            throw new IllegalArgumentException("Book ID cannot be null for deletion");
+        }
+        else {
+            webClient.delete().uri("/books/{id}").retrieve().toBodilessEntity().subscribe(response -> {
+                if (response.getStatusCode().is2xxSuccessful()) {
+                    books.removeIf(b -> b.getId().equals(book.getId()));
+                    booksConsumer.accept(new ArrayList<>(books));
+                }
+            });
+        }
     }
 
     public void getAllBooks(String author, Book.Genre genre, Consumer<List<Book>> booksConsumer) {
