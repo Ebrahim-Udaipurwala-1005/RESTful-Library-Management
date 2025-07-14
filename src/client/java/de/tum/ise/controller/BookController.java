@@ -95,11 +95,11 @@ public class BookController {
         webClient.get()
                 .uri(uriBuilder -> {
                     UriBuilder builder = uriBuilder.path("/books");
-                    if (author != null && !author.isBlank()) {
-                        builder = builder.queryParam("author", author);
+                    if (author != null && !author.trim().isEmpty()) {  // Added trim()
+                        builder = builder.queryParam("author", author.trim());  // Trim whitespace
                     }
                     if (genre != null) {
-                        builder = builder.queryParam("genre", genre.name());
+                        builder = builder.queryParam("genre", genre.toString().toUpperCase());  // Ensure uppercase
                     }
                     return builder.build();
                 })
