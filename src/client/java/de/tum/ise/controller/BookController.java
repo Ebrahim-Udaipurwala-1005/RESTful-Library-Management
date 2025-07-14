@@ -76,12 +76,16 @@ public class BookController {
             throw new IllegalArgumentException("Book ID cannot be null for deletion");
         }
         else {
-            webClient.delete().uri("/books/{id}").retrieve().toBodilessEntity().subscribe(response -> {
-                if (response.getStatusCode().is2xxSuccessful()) {
-                    books.removeIf(b -> b.getId().equals(book.getId()));
-                    booksConsumer.accept(new ArrayList<>(books));
-                }
-            });
+            webClient.delete()
+                    .uri("/{id}", book.getId())
+                    .retrieve()
+                    .toBodilessEntity()
+                    .doOnSuccess(response -> {
+                        books.removeIf(b -> b.getId().equals(book.getId()));
+                        booksConsumer.accept(new ArrayList<>(books));
+                    })
+                    .subscribe();
+
         }
     }
 
