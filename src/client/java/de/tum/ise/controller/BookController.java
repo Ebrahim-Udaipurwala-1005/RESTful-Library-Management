@@ -4,6 +4,8 @@ import de.tum.ise.model.Book;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 
@@ -50,9 +52,12 @@ public class BookController {
         // The URI should include 'author' and 'genre' as query parameters if they are not null/blank.
     }
 
+    @PostMapping("/books/{id}/checkout")
     public void checkoutBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP POST request to the checkout endpoint.
         // On success, the server returns the updated book. Use the `updateLocalBook` helper.
+        updateLocalBook(book, booksConsumer);
+        ResponseEntity.ok(book);
     }
 
     public void returnBook(Book book, Consumer<List<Book>> booksConsumer) {
