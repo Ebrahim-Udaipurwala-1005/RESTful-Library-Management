@@ -61,7 +61,10 @@ public class BookService {
         // for books where the author's name contains the search string (case-insensitive).
         // If the genre parameter is not null, also filter the stream by the given genre.
 
-        return bookStream.filter(book -> (author != null && !author.isBlank() && book.getAuthor().toLowerCase().contains(author.toLowerCase()))).filter(book -> (genre != null && book.getGenre().equals(genre))).collect(Collectors.toList());
+        return bookStream
+                .filter(book -> (author == null || author.isBlank() || book.getAuthor().toLowerCase().contains(author.toLowerCase())))
+                .filter(book -> (genre == null || book.getGenre().equals(genre)))
+                .collect(Collectors.toList());
     }
 
     public Optional<Book> checkOutBook(UUID bookId) {
