@@ -42,19 +42,63 @@ public class BookController {
 
     public void addBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP POST request to create a book.
+        webClient.post()
+                .uri("/books")
+                .bodyValue(book).retrieve()
+                .toEntity(Book.class).subscribe(response -> {
+                    response.getStatusCode().is2xxSuccessful();
+                    books.add(response.getBody());
+                    booksConsumer.accept(new ArrayList<>(books));
+        });
     }
 
     public void updateBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP PUT request to update a book.
+        webClient.put()
+                .uri("/books/{id}")
+                .bodyValue(book)
+                .retrieve()
+                .toEntity(Book.class)
+                .subscribe(response -> {
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        updateLocalBook(response.getBody(), booksConsumer);
+                    }
+                });
     }
 
     public void deleteBook(Book book, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2: Make an HTTP DELETE request to delete a book.
+        webClient.delete().uri("/books/{id}").retrieve().toBodilessEntity().subscribe(response -> {
+            if (response.getStatusCode().is2xxSuccessful()) {
+                books.removeIf(b -> b.getId().equals(book.getId()));
+                booksConsumer.accept(new ArrayList<>(books));
+            }
+        });
     }
 
     public void getAllBooks(String author, Book.Genre genre, Consumer<List<Book>> booksConsumer) {
         // TODO Part 2 and 3: Make an HTTP GET request to fetch books.
         // The URI should include 'author' and 'genre' as query parameters if they are not null/blank.
+        webClient.get()
+                .uri(uriBuilder -> {
+                    UriBuilder builder = uriBuilder.path("/books");
+                    if (author != null && !author.isEmpty()) {
+                        builder.queryParam("author", author);
+                    }
+                    if (genre != null) {
+                        builder.queryParam("genre", genre.name());
+                    }
+                    return builder.build();
+                })
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<List<Book>>() {})
+                .subscribe(response -> {
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        books.clear();
+                        books.addAll(response.getBody());
+                        booksConsumer.accept(new ArrayList<>(books));
+                    }
+                });
     }
 
     @PostMapping("/books/{id}/checkout")
