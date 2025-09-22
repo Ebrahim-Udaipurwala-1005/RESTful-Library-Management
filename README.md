@@ -1,6 +1,6 @@
 # RESTful Library Management
 
-This project is a modern library catalog system that demonstrates a **RESTful API** and a client-side application for managing a book collection. The core functionalities include **CRUD** (Create, Read, Update, Delete) operations and specific actions like checking books in and out.
+This project is a solution to the "RESTful Library Management" exercise for the INHN0006 Introduction to Software Engineering course by Prof. Dr. Stefan Wagner. This project is a modern library catalog system that demonstrates a **RESTful API** and a client-side application for managing a book collection. The core functionalities include **CRUD** (Create, Read, Update, Delete) operations and specific actions like checking books in and out.
 
 The project uses **Spring Web** on the server-side to handle REST requests and **Spring WebFlux** on the client-side to send them.
 
