@@ -1,4 +1,4 @@
-# RESTful Library Management 📚
+# RESTful Library Management
 
 This project is a modern library catalog system that demonstrates a **RESTful API** and a client-side application for managing a book collection. The core functionalities include **CRUD** (Create, Read, Update, Delete) operations and specific actions like checking books in and out.
 
@@ -6,7 +6,7 @@ The project uses **Spring Web** on the server-side to handle REST requests and *
 
 ---
 
-## Application Architecture 🏛️
+## Application Architecture
 
 The application follows a **layered architecture** to separate concerns on both the client and server sides.
 
@@ -23,7 +23,7 @@ The client also uses the **Model-View-Controller (MVC)** pattern to structure it
 
 ---
 
-## API Endpoints and Functionality ⚙️
+## API Endpoints and Functionality
 
 The server exposes a set of REST endpoints on port `8080` for the `/books` resource.
 
@@ -41,7 +41,7 @@ If an action cannot be performed (e.g., checking out a book that is already chec
 
 ---
 
-## How to Run the Application ▶️
+## How to Run the Application
 
 To run the application locally, you must start both the server and the client.
 
